@@ -2,7 +2,7 @@ services:
   - type: web
     name: nova-backend
     env: docker
-    plan: starter
+    plan: free
     region: singapore
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
@@ -42,7 +42,7 @@ services:
   - type: web
     name: nova-frontend
     env: docker
-    plan: starter
+    plan: free
     region: singapore
     dockerfilePath: ./frontend/Dockerfile
     dockerContext: ./frontend
@@ -55,7 +55,7 @@ services:
 
 databases:
   - name: nova-postgres
-    plan: starter
+    plan: free
     databaseName: nova_athletics
     user: nova
 
