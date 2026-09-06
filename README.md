@@ -1,5 +1,9 @@
 # NOVA ATHLETICS
 
+[![CI](https://github.com/tiennguyen3000/nova-athletics/actions/workflows/ci.yml/badge.svg)](https://github.com/tiennguyen3000/nova-athletics/actions/workflows/ci.yml)
+[![CD](https://github.com/tiennguyen3000/nova-athletics/actions/workflows/cd.yml/badge.svg)](https://github.com/tiennguyen3000/nova-athletics/actions/workflows/cd.yml)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://dashboard.render.com/blueprint/new?url=https://github.com/tiennguyen3000/nova-athletics)
+
 Production-grade sportswear ecommerce — modular monolith (Spring Boot + Next.js) inspired by Nike UX (ORIGINAL implementation).
 
 ## Quick Start
@@ -56,3 +60,12 @@ Java 21, Spring Boot 3+, PostgreSQL 16, Redis 7, MinIO, Next.js + TS + Tailwind 
 ## License
 
 Proprietary — ORIGINAL code, no Nike assets.
+
+## Deploy to Render
+
+1. Vào https://dashboard.render.com → **New + → Blueprint** → Connect `tiennguyen3000/nova-athletics` → Approve.
+2. Render tự đọc `render.yaml` và tạo 4 resources: `nova-postgres` (Postgres), `nova-redis` (Redis), `nova-backend` (Docker, health `/actuator/health`), `nova-frontend` (Docker, `NEXT_PUBLIC_API_URL=https://nova-backend.onrender.com`).
+3. Đợi build xong (~5-7′ backend Maven + ~2′ frontend): backend `https://nova-backend.onrender.com/actuator/health` → `{"status":"UP"}`, frontend `https://nova-frontend.onrender.com` → storefront (58 products, 8 demo).
+4. Nếu Redis Postgres free hết, chọn `starter` (Render sẽ báo). CORS đã set `https://nova-frontend.onrender.com`.
+
+> Hoặc **Manual**: New → Web Service → Connect repo → Runtime Docker → Dockerfile `./backend/Dockerfile` / `./frontend/Dockerfile`, add Postgres/Redis từ dashboard và copy env từ `render.yaml`.

@@ -1,0 +1,65 @@
+services:
+  - type: web
+    name: nova-backend
+    env: docker
+    plan: starter
+    region: singapore
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: nova-postgres
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: nova-postgres
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: nova-postgres
+          property: password
+      - key: SPRING_REDIS_HOST
+        fromDatabase:
+          name: nova-redis
+          property: host
+      - key: SPRING_REDIS_PORT
+        fromDatabase:
+          name: nova-redis
+          property: port
+      - key: SPRING_REDIS_PASSWORD
+        fromDatabase:
+          name: nova-redis
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://nova-frontend.onrender.com
+      - key: JAVA_OPTS
+        value: -Xms256m -Xmx512m
+
+  - type: web
+    name: nova-frontend
+    env: docker
+    plan: starter
+    region: singapore
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://nova-backend.onrender.com
+      - key: PORT
+        value: 3000
+    healthCheckPath: /
+
+databases:
+  - name: nova-postgres
+    plan: starter
+    databaseName: nova_athletics
+    user: nova
+
+  - name: nova-redis
+    plan: free
+    # Render Redis is key-value
+    # If 'free' not available, dashboard will suggest starter
