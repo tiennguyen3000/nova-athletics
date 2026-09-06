@@ -10,15 +10,39 @@ import java.util.Map;
 
 public class RenderDatabaseUrlProcessor implements EnvironmentPostProcessor {
   private static String toJdbc(String postgresUrl) {
-    // postgres://user:pass@host:port/db?params -> jdbc:postgresql://host:port/db?params
-    // Strip userinfo (user:pass@) because Hikari uses separate SPRING_DATASOURCE_USERNAME/PASSWORD
-    // and PG driver rejects userinfo with special chars
     String jdbc = postgresUrl.replaceFirst("^postgres(ql)?://[^@]*@", "jdbc:postgresql://");
-    // If no @ found (no userinfo), fallback to simple prefix replace
     if (jdbc.equals(postgresUrl)) {
       jdbc = postgresUrl.replaceFirst("^postgres(ql)?://", "jdbc:postgresql://");
     }
+    // Fix Render internal host: dpg-xxx-a -> dpg-xxx-a.singapore-postgres.render.com (or oregon)
+    // If host is short (no dot) like dpg-daeecrn40ujc73ete7gg-a, expand to external
+    // Pattern: jdbc:postgresql://dpg-....-a[/or:port/db]
+    if (jdbc.matches(".*://dpg-[a-z0-9]+-a([:/].*|/.*|$)") && !jdbc.contains(".render.com")) {
+      // extract host part
+      jdbc = jdbc.replaceFirst("(://dpg-[a-z0-9]+-a)([:/])", "$1.singapore-postgres.render.com$2");
+      // also handle without port/slash: jdbc:postgresql://dpg-xxx-a
+      if (jdbc.matches(".*://dpg-[a-z0-9]+-a$")) {
+        jdbc = jdbc + ".singapore-postgres.render.com";
+      }
+      // fallback try oregon if singapore fails? we try singapore first
+    }
+    // Ensure sslmode=require for Render (PG requires SSL)
+    if (!jdbc.contains("sslmode=")) {
+      jdbc += (jdbc.contains("?") ? "&" : "?") + "sslmode=require";
+    }
     return jdbc;
+  }
+  private static String stripUserinfo(String jdbcUrl) {
+    if (jdbcUrl.contains("@") && jdbcUrl.startsWith("jdbc:postgresql://")) {
+      String stripped = jdbcUrl.replaceFirst("^jdbc:postgresql://[^@]*@", "jdbc:postgresql://");
+      // also expand short host if needed
+      if (stripped.matches(".*://dpg-[a-z0-9]+-a([:/].*|/.*|$)") && !stripped.contains(".render.com")) {
+        stripped = stripped.replaceFirst("(://dpg-[a-z0-9]+-a)([:/])", "$1.singapore-postgres.render.com$2");
+      }
+      if (!stripped.contains("sslmode=")) stripped += (stripped.contains("?") ? "&" : "?") + "sslmode=require";
+      return stripped;
+    }
+    return jdbcUrl;
   }
   @Override
   public void postProcessEnvironment(ConfigurableEnvironment env, SpringApplication app) {
@@ -44,25 +68,33 @@ public class RenderDatabaseUrlProcessor implements EnvironmentPostProcessor {
         map.put("DATABASE_URL", jdbc);
         System.setProperty("spring.datasource.url", jdbc);
         env.getPropertySources().addFirst(new MapPropertySource("renderFix-" + key, map));
-        System.out.println("[RenderFix] Converted " + key + " postgres:// -> jdbc:postgresql:// stripped userinfo, result=" + jdbc.substring(0, Math.min(90, jdbc.length())) + "...");
+        System.out.println("[RenderFix] Converted " + key + " -> " + jdbc.substring(0, Math.min(110, jdbc.length())) + "...");
         converted = true;
       } else if (url != null && url.startsWith("jdbc:postgresql://") && url.contains("@")) {
-        // Already jdbc but still contains userinfo -> strip it too
-        String jdbc = url.replaceFirst("^jdbc:postgresql://[^@]*@", "jdbc:postgresql://");
-        if (!jdbc.equals(url)) {
+        String jdbc = stripUserinfo(url);
+        Map<String, Object> map = new HashMap<>();
+        map.put("spring.datasource.url", jdbc);
+        map.put("SPRING_DATASOURCE_URL", jdbc);
+        System.setProperty("spring.datasource.url", jdbc);
+        env.getPropertySources().addFirst(new MapPropertySource("renderFix-strip-" + key, map));
+        System.out.println("[RenderFix] Stripped userinfo " + key + " -> " + jdbc.substring(0, Math.min(110, jdbc.length())) + "...");
+        converted = true;
+      } else if (url != null && url.startsWith("jdbc:postgresql://")) {
+        // also fix short host and sslmode even if no userinfo
+        String fixed = url;
+        if (fixed.matches(".*://dpg-[a-z0-9]+-a([:/].*|/.*|$)") && !fixed.contains(".render.com")) {
+          fixed = fixed.replaceFirst("(://dpg-[a-z0-9]+-a)([:/])", "$1.singapore-postgres.render.com$2");
+        }
+        if (!fixed.contains("sslmode=")) fixed += (fixed.contains("?") ? "&" : "?") + "sslmode=require";
+        if (!fixed.equals(url)) {
           Map<String, Object> map = new HashMap<>();
-          map.put("spring.datasource.url", jdbc);
-          map.put("SPRING_DATASOURCE_URL", jdbc);
-          System.setProperty("spring.datasource.url", jdbc);
-          env.getPropertySources().addFirst(new MapPropertySource("renderFix-strip-" + key, map));
-          System.out.println("[RenderFix] Stripped userinfo from existing jdbc URL " + key + " -> " + jdbc.substring(0, Math.min(90, jdbc.length())) + "...");
-          converted = true;
+          map.put("spring.datasource.url", fixed);
+          System.setProperty("spring.datasource.url", fixed);
+          env.getPropertySources().addFirst(new MapPropertySource("renderFix-hostfix-" + key, map));
+          System.out.println("[RenderFix] Fixed host/ssl for " + key + " -> " + fixed.substring(0, Math.min(110, fixed.length())) + "...");
         } else {
           System.out.println("[RenderFix] Found existing jdbc URL for " + key);
-          converted = true;
         }
-      } else if (url != null && url.startsWith("jdbc:postgresql://")) {
-        System.out.println("[RenderFix] Found existing jdbc URL for " + key);
         converted = true;
       }
     }
@@ -75,7 +107,7 @@ public class RenderDatabaseUrlProcessor implements EnvironmentPostProcessor {
           map.put("spring.datasource.url", jdbc);
           System.setProperty("spring.datasource.url", jdbc);
           env.getPropertySources().addFirst(new MapPropertySource("renderFix-env-" + e.getKey(), map));
-          System.out.println("[RenderFix] Converted System.getenv " + e.getKey() + " to JDBC stripped");
+          System.out.println("[RenderFix] Converted System.getenv " + e.getKey() + " -> " + jdbc.substring(0, Math.min(110, jdbc.length())) + "...");
           converted = true;
         }
       }
