@@ -1,0 +1,1 @@
+export default function NotFound(){ return <div className="py-20 text-center"><h1 className="text-2xl font-bold">404 — Khong tim thay</h1><p className="text-sm text-neutral-500 mt-2">Trang ban tim khong ton tai.</p></div>; }

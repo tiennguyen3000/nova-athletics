@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+  <changeSet id="002-01" author="nova">
+    <createTable tableName="customers">
+      <column name="id" type="BIGSERIAL" autoIncrement="true"><constraints primaryKey="true"/></column>
+      <column name="user_id" type="BIGINT"><constraints nullable="false" unique="true" foreignKeyName="fk_cust_user" references="users(id)"/></column>
+      <column name="first_name" type="VARCHAR(100)"/><column name="last_name" type="VARCHAR(100)"/><column name="phone" type="VARCHAR(32)"/>
+      <column name="date_of_birth" type="DATE"/><column name="gender" type="VARCHAR(16)"/><column name="avatar_url" type="VARCHAR(512)"/>
+      <column name="deleted_at" type="TIMESTAMPTZ"/><column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/><column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/>
+    </createTable>
+    <createTable tableName="employees">
+      <column name="id" type="BIGSERIAL" autoIncrement="true"><constraints primaryKey="true"/></column>
+      <column name="user_id" type="BIGINT"><constraints nullable="false" unique="true" foreignKeyName="fk_emp_user" references="users(id)"/></column>
+      <column name="employee_code" type="VARCHAR(32)"><constraints nullable="false" unique="true"/></column>
+      <column name="department" type="VARCHAR(100)"/><column name="position" type="VARCHAR(100)"/><column name="hire_date" type="DATE"/>
+      <column name="status" type="VARCHAR(32)" defaultValue="ACTIVE"/><column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/><column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/>
+    </createTable>
+    <createTable tableName="addresses">
+      <column name="id" type="BIGSERIAL" autoIncrement="true"><constraints primaryKey="true"/></column>
+      <column name="customer_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_addr_cust" references="customers(id)"/></column>
+      <column name="label" type="VARCHAR(64)"/><column name="recipient_name" type="VARCHAR(255)"><constraints nullable="false"/></column>
+      <column name="phone" type="VARCHAR(32)"><constraints nullable="false"/></column>
+      <column name="line1" type="VARCHAR(255)"><constraints nullable="false"/></column><column name="line2" type="VARCHAR(255)"/>
+      <column name="ward" type="VARCHAR(100)"/><column name="district" type="VARCHAR(100)"/><column name="city" type="VARCHAR(100)"><constraints nullable="false"/></column>
+      <column name="country" type="VARCHAR(64)" defaultValue="VN"/><column name="is_default" type="BOOLEAN" defaultValueBoolean="false"/>
+      <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/><column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/>
+    </createTable>
+    <createIndex tableName="addresses" indexName="idx_addresses_customer"><column name="customer_id"/></createIndex>
+  </changeSet>
+</databaseChangeLog>

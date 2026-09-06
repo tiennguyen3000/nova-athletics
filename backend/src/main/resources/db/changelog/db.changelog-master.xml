@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+  <include file="db/changelog/001-users-roles-permissions.xml"/>
+  <include file="db/changelog/002-customers-employees-addresses.xml"/>
+  <include file="db/changelog/003-categories-collections.xml"/>
+  <include file="db/changelog/004-products.xml"/>
+  <include file="db/changelog/005-warehouses-inventory.xml"/>
+  <include file="db/changelog/006-carts-wishlists.xml"/>
+  <include file="db/changelog/007-orders-payments-shipments.xml"/>
+  <include file="db/changelog/008-coupons-reviews-notifications.xml"/>
+  <include file="db/changelog/009-media-audit-settings.xml"/>
+  <include file="db/changelog/010-idempotency.xml"/>
+  <include file="db/changelog/011-seed.xml"/>
+</databaseChangeLog>

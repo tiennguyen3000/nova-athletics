@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+  <changeSet id="004-01" author="nova">
+    <createTable tableName="products">
+      <column name="id" type="BIGSERIAL" autoIncrement="true"><constraints primaryKey="true"/></column>
+      <column name="name" type="VARCHAR(255)"><constraints nullable="false"/></column>
+      <column name="slug" type="VARCHAR(255)"><constraints nullable="false"/></column>
+      <column name="subtitle" type="VARCHAR(255)"/><column name="description" type="TEXT"/>
+      <column name="brand" type="VARCHAR(100)" defaultValue="NOVA"/><column name="gender" type="VARCHAR(16)"/><column name="sport" type="VARCHAR(64)"/>
+      <column name="base_price" type="NUMERIC(12,2)"><constraints nullable="false"/></column><column name="sale_price" type="NUMERIC(12,2)"/>
+      <column name="currency" type="VARCHAR(3)" defaultValue="VND"/><column name="status" type="VARCHAR(32)" defaultValue="ACTIVE"/>
+      <column name="is_featured" type="BOOLEAN" defaultValueBoolean="false"/><column name="deleted_at" type="TIMESTAMPTZ"/>
+      <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/><column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/>
+    </createTable>
+    <createIndex tableName="products" indexName="idx_products_slug"><column name="slug"/></createIndex>
+    <createIndex tableName="products" indexName="idx_products_status"><column name="status"/></createIndex>
+    <createTable tableName="product_variants">
+      <column name="id" type="BIGSERIAL" autoIncrement="true"><constraints primaryKey="true"/></column>
+      <column name="product_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_var_prod" references="products(id)"/></column>
+      <column name="sku" type="VARCHAR(64)"><constraints nullable="false" unique="true"/></column>
+      <column name="size" type="VARCHAR(32)"/><column name="color" type="VARCHAR(64)"/><column name="color_hex" type="VARCHAR(7)"/>
+      <column name="price_override" type="NUMERIC(12,2)"/><column name="weight_grams" type="INT"/>
+      <column name="is_active" type="BOOLEAN" defaultValueBoolean="true"/><column name="deleted_at" type="TIMESTAMPTZ"/>
+      <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/><column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/>
+    </createTable>
+    <createIndex tableName="product_variants" indexName="idx_variants_product"><column name="product_id"/></createIndex>
+    <createTable tableName="product_images">
+      <column name="id" type="BIGSERIAL" autoIncrement="true"><constraints primaryKey="true"/></column>
+      <column name="product_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_img_prod" references="products(id)"/></column>
+      <column name="variant_id" type="BIGINT"><constraints foreignKeyName="fk_img_var" references="product_variants(id)"/></column>
+      <column name="media_id" type="BIGINT"/><column name="url" type="VARCHAR(512)"><constraints nullable="false"/></column>
+      <column name="alt_text" type="VARCHAR(255)"/><column name="sort_order" type="INT" defaultValueNumeric="0"/><column name="is_primary" type="BOOLEAN" defaultValueBoolean="false"/>
+      <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/><column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/>
+    </createTable>
+    <createTable tableName="product_attributes"><column name="id" type="BIGSERIAL" autoIncrement="true"><constraints primaryKey="true"/></column><column name="name" type="VARCHAR(64)"><constraints nullable="false" unique="true"/></column><column name="display_name" type="VARCHAR(64)"/><column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/><column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/></createTable>
+    <createTable tableName="product_attribute_values"><column name="id" type="BIGSERIAL" autoIncrement="true"><constraints primaryKey="true"/></column><column name="product_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_pav_prod" references="products(id)"/></column><column name="attribute_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_pav_attr" references="product_attributes(id)"/></column><column name="value" type="VARCHAR(255)"><constraints nullable="false"/></column><column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/><column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/></createTable>
+    <createTable tableName="product_tags"><column name="id" type="BIGSERIAL" autoIncrement="true"><constraints primaryKey="true"/></column><column name="name" type="VARCHAR(64)"><constraints nullable="false" unique="true"/></column><column name="slug" type="VARCHAR(64)"><constraints nullable="false" unique="true"/></column><column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/></createTable>
+    <createTable tableName="product_tag_mapping"><column name="product_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_ptm_prod" references="products(id)"/></column><column name="tag_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_ptm_tag" references="product_tags(id)"/></column></createTable>
+    <addPrimaryKey tableName="product_tag_mapping" columnNames="product_id, tag_id"/>
+    <createTable tableName="product_categories"><column name="product_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_pc_prod" references="products(id)"/></column><column name="category_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_pc_cat" references="categories(id)"/></column></createTable>
+    <addPrimaryKey tableName="product_categories" columnNames="product_id, category_id"/>
+    <createTable tableName="product_collections"><column name="product_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_pcol_prod" references="products(id)"/></column><column name="collection_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_pcol_col" references="collections(id)"/></column></createTable>
+    <addPrimaryKey tableName="product_collections" columnNames="product_id, collection_id"/>
+  </changeSet>
+</databaseChangeLog>

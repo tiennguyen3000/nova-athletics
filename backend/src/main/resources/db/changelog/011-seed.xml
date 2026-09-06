@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+  <changeSet id="011-01" author="nova">
+    <insert tableName="roles"><column name="id" valueNumeric="1"/><column name="name" value="CUSTOMER"/><column name="description" value="Customer"/></insert>
+    <insert tableName="roles"><column name="id" valueNumeric="2"/><column name="name" value="EMPLOYEE"/><column name="description" value="Employee"/></insert>
+    <insert tableName="roles"><column name="id" valueNumeric="3"/><column name="name" value="MANAGER"/><column name="description" value="Manager"/></insert>
+    <insert tableName="roles"><column name="id" valueNumeric="4"/><column name="name" value="ADMIN"/><column name="description" value="Admin"/></insert>
+    <insert tableName="roles"><column name="id" valueNumeric="5"/><column name="name" value="SUPER_ADMIN"/><column name="description" value="Super Admin"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="1"/><column name="name" value="PRODUCT_READ"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="2"/><column name="name" value="PRODUCT_CREATE"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="3"/><column name="name" value="PRODUCT_UPDATE"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="4"/><column name="name" value="PRODUCT_DELETE"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="5"/><column name="name" value="CATEGORY_MANAGE"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="6"/><column name="name" value="COLLECTION_MANAGE"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="7"/><column name="name" value="ORDER_READ"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="8"/><column name="name" value="ORDER_UPDATE"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="9"/><column name="name" value="ORDER_CANCEL"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="10"/><column name="name" value="ORDER_REFUND"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="11"/><column name="name" value="INVENTORY_READ"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="12"/><column name="name" value="INVENTORY_UPDATE"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="13"/><column name="name" value="INVENTORY_TRANSFER"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="14"/><column name="name" value="CUSTOMER_READ"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="15"/><column name="name" value="CUSTOMER_UPDATE"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="16"/><column name="name" value="EMPLOYEE_READ"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="17"/><column name="name" value="EMPLOYEE_MANAGE"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="18"/><column name="name" value="PROMOTION_MANAGE"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="19"/><column name="name" value="REVIEW_MANAGE"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="20"/><column name="name" value="REPORT_READ"/></insert>
+    <insert tableName="permissions"><column name="id" valueNumeric="21"/><column name="name" value="AUDIT_READ"/></insert>
+  </changeSet>
+  <changeSet id="011-02" author="nova">
+    <!-- CUSTOMER: 1,14 -->
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="1"/><column name="permission_id" valueNumeric="1"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="1"/><column name="permission_id" valueNumeric="7"/></insert>
+    <!-- EMPLOYEE: 1,7,8,11,14 -->
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="2"/><column name="permission_id" valueNumeric="1"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="2"/><column name="permission_id" valueNumeric="7"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="2"/><column name="permission_id" valueNumeric="8"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="2"/><column name="permission_id" valueNumeric="11"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="2"/><column name="permission_id" valueNumeric="14"/></insert>
+    <!-- MANAGER -->
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="3"/><column name="permission_id" valueNumeric="1"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="3"/><column name="permission_id" valueNumeric="2"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="3"/><column name="permission_id" valueNumeric="3"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="3"/><column name="permission_id" valueNumeric="5"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="3"/><column name="permission_id" valueNumeric="6"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="3"/><column name="permission_id" valueNumeric="7"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="3"/><column name="permission_id" valueNumeric="8"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="3"/><column name="permission_id" valueNumeric="9"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="3"/><column name="permission_id" valueNumeric="10"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="3"/><column name="permission_id" valueNumeric="11"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="3"/><column name="permission_id" valueNumeric="12"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="3"/><column name="permission_id" valueNumeric="13"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="3"/><column name="permission_id" valueNumeric="14"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="3"/><column name="permission_id" valueNumeric="16"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="3"/><column name="permission_id" valueNumeric="18"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="3"/><column name="permission_id" valueNumeric="19"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="3"/><column name="permission_id" valueNumeric="20"/></insert>
+    <!-- ADMIN get all except maybe -->
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="1"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="2"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="3"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="4"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="5"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="6"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="7"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="8"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="9"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="10"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="11"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="12"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="13"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="14"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="15"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="16"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="17"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="18"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="19"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="20"/></insert>
+    <insert tableName="role_permissions"><column name="role_id" valueNumeric="4"/><column name="permission_id" valueNumeric="21"/></insert>
+  </changeSet>
+  <changeSet id="011-03" author="nova">
+    <!-- SUPER_ADMIN gets all 21 -->
+    <sql>INSERT INTO role_permissions(role_id, permission_id) SELECT 5, id FROM permissions</sql>
+  </changeSet>
+</databaseChangeLog>

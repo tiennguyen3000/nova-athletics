@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+  <changeSet id="003-01" author="nova">
+    <createTable tableName="categories">
+      <column name="id" type="BIGSERIAL" autoIncrement="true"><constraints primaryKey="true"/></column>
+      <column name="parent_id" type="BIGINT"><constraints foreignKeyName="fk_cat_parent" references="categories(id)"/></column>
+      <column name="name" type="VARCHAR(255)"><constraints nullable="false"/></column>
+      <column name="slug" type="VARCHAR(255)"><constraints nullable="false"/></column>
+      <column name="description" type="TEXT"/><column name="image_url" type="VARCHAR(512)"/><column name="sort_order" type="INT" defaultValueNumeric="0"/>
+      <column name="is_active" type="BOOLEAN" defaultValueBoolean="true"/><column name="deleted_at" type="TIMESTAMPTZ"/>
+      <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/><column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/>
+    </createTable>
+    <createIndex tableName="categories" indexName="idx_categories_slug"><column name="slug"/></createIndex>
+    <createTable tableName="collections">
+      <column name="id" type="BIGSERIAL" autoIncrement="true"><constraints primaryKey="true"/></column>
+      <column name="name" type="VARCHAR(255)"><constraints nullable="false"/></column>
+      <column name="slug" type="VARCHAR(255)"><constraints nullable="false"/></column>
+      <column name="description" type="TEXT"/><column name="image_url" type="VARCHAR(512)"/><column name="is_active" type="BOOLEAN" defaultValueBoolean="true"/>
+      <column name="deleted_at" type="TIMESTAMPTZ"/><column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/><column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/>
+    </createTable>
+    <createIndex tableName="collections" indexName="idx_collections_slug"><column name="slug"/></createIndex>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,1 @@
+"use client"; export default function Error({error}:{error:Error}){ return <div className="py-20 text-center"><h1 className="text-xl font-bold">Da co loi xay ra</h1><p className="text-sm text-neutral-500">{error.message}</p></div>; }

@@ -1,0 +1,1 @@
+export default function Loading(){ return <div className="py-12"><div className="animate-pulse h-32 bg-neutral-100 rounded"/><div className="mt-4 grid grid-cols-4 gap-4">{Array.from({length:8}).map((_,i)=><div key={i} className="h-48 bg-neutral-100 animate-pulse rounded"/>)}</div></div>; }

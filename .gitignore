@@ -1,0 +1,27 @@
+# Java / Maven
+backend/target/
+*.jar
+*.class
+.mvn/
+# Node
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+# Env
+.env
+!.env.example
+# OS
+.DS_Store
+Thumbs.db
+# IDE
+.idea/
+.vscode/
+*.iml
+# Logs
+*.log
+npm-debug.log*
+# Docker volumes (local)
+pgdata/
+minio_data/
+# Temp
+/tmp/

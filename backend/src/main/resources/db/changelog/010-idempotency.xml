@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+  <changeSet id="010-01" author="nova">
+    <createTable tableName="idempotency_keys"><column name="id" type="BIGSERIAL" autoIncrement="true"><constraints primaryKey="true"/></column><column name="idem_key" type="VARCHAR(64)"><constraints nullable="false" unique="true"/></column><column name="method" type="VARCHAR(16)"><constraints nullable="false"/></column><column name="path" type="VARCHAR(255)"><constraints nullable="false"/></column><column name="response_status" type="INT"/><column name="response_body" type="TEXT"/><column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()"/><column name="expires_at" type="TIMESTAMPTZ"/></createTable>
+  </changeSet>
+</databaseChangeLog>

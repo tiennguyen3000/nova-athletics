@@ -1,0 +1,4 @@
+export function StatusBadge({status}:{status:string}){
+  const m:Record<string,string>={ PENDING:"bg-yellow-100 text-yellow-800", CONFIRMED:"bg-blue-100 text-blue-800", PROCESSING:"bg-blue-100 text-blue-800", PACKED:"bg-indigo-100 text-indigo-800", SHIPPED:"bg-purple-100 text-purple-800", DELIVERED:"bg-green-100 text-green-800", CANCELLED:"bg-red-100 text-red-800", REFUNDED:"bg-neutral-100 text-neutral-700", ACTIVE:"bg-green-100 text-green-800", DRAFT:"bg-neutral-100 text-neutral-700", PAID:"bg-green-100 text-green-800" };
+  return <span className={"text-xs px-2 py-1 rounded-full font-medium "+(m[status]||"bg-neutral-100")}>{status}</span>;
+}

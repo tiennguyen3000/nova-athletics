@@ -1,0 +1,1 @@
+export function AnnouncementBar(){ return <div className="bg-black text-white text-center text-xs py-2 tracking-wide">MIEN PHI VAN CHUYEN CHO DON HANG TREN 1.500.000d — DOI TRA 30 NGAY <span className="underline ml-2">Tim hieu them</span></div>; }
